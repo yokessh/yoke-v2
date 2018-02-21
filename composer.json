@@ -1,0 +1,33 @@
+{
+    "name": "yokessh/yoke",
+    "description": "SSH Connection Manager and Keychain",
+    "type": "project",
+    "require": {
+        "php": "^7.2",
+        "symfony/console": "^4.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Yoke\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Yoke\\Test\\": "tests/"
+        }
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Lucas Mezêncio",
+            "email": "lucas.mezencio@gmail.com"
+        },
+        {
+            "name": "Joubert Assis",
+            "email": "joubert@redrat.com.br"
+        }
+    ]
+}
