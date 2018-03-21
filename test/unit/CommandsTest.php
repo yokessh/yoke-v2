@@ -14,58 +14,65 @@ use Symfony\Component\Console\Output\StreamOutput;
 
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
-require (file_exists("./autoload.php")) ? './autoload.php' : '../vendor/autoload.php';
+// auto-loader
+// TODO: setup phpunit.xml and remove auto-loader on the tests
+require (file_exists('./autoload.php'))
+    ? './autoload.php'
+    : '../vendor/autoload.php';
 
 class CommandsTest extends TestCase
 {
-  /**
-   * @dataProvider commandsProvider
-   */
-  public function testCommand($command, $parameters, $expected)
-  {
-    $dispatcher = new EventDispatcher();
+    /**
+    * @dataProvider commandsProvider
+    */
+    public function testCommand($command, $parameters, $expected)
+    {
+        // EventDispatcher fulfill a complete test method request
+        $dispatcher = new EventDispatcher();
 
-    $application = new Application();
-    $application->setDispatcher($dispatcher);
-    $application->setAutoExit(false);
+        $application = new Application();
+        $application->setDispatcher($dispatcher);
+        $application->setAutoExit(false);
 
-    $dispatcher->addListener(ConsoleEvents::COMMAND, function (ConsoleCommandEvent $event) {
-        // gets the input instance
-        //$input = $event->getInput();
+        // EventDispatcher callback before a command runs
+        $dispatcher->addListener(ConsoleEvents::COMMAND, function (ConsoleCommandEvent $event) {
+            // gets the input instance
+            //$input = $event->getInput();
 
-        // gets the output instance
-        //$output = $event->getOutput();
+            // gets the output instance
+            //$output = $event->getOutput();
 
-        // gets the command to be executed
-        //$command = $event->getCommand();
+            // gets the command to be executed
+            //$command = $event->getCommand();
 
-        // writes something about the command
-        //$output->writeln(sprintf('Running command <info>%s</info>', $input));
+            // gets the application
+            //$application = $command->getApplication();
+        });
 
-        // gets the application
-        //$application = $command->getApplication();
-    });
+        // Encapsulate the Yoke Dispatcher to the application
+        (new Yoke\Dispatcher($application));
 
-    (new Yoke\Dispatcher($application));
+        // TODO: Fix the use of the Tester. The use of the full commandline string is not allowed.
+        $tester = new ApplicationTester($application);
 
-    $tester = new ApplicationTester($application);
+        // TODO: Stop using the application itself. To mocking something up in the future the ApplicationTester is needed.
+        $commandline = sprintf('%s %s', $command, $parameters);
+        $output = new StreamOutput(fopen('php://memory', 'w', false));
+        $application->run(new StringInput($commandline), $output);
 
-    $commandline = sprintf('%s %s', $command, $parameters);
+        rewind($output->getStream());
+        $display = stream_get_contents($output->getStream());
 
-    $output = new StreamOutput(fopen('php://memory', 'w', false));
-    $application->run(new StringInput($commandline), $output);
+        // The Test
+        $this->assertEquals($display, $expected);
+    }
 
-    rewind($output->getStream());
-    $display = stream_get_contents($output->getStream());
-
-    $this->assertEquals($display, $expected);
-  }
-
-  public function commandsProvider()
-  {
-    return [
-      ['echo', 'test', 'Echo: test'],
-      ['echo', '--bar 123 test', 'Echo: test [bar = 123]'],
-    ];
-  }
+    public function commandsProvider()
+    {
+        // TODO: Correct the data for the ApplicationTester when used.
+        return [
+            ['echo', 'test', 'Echo: test'],
+            ['echo', '--bar 123 test', 'Echo: test [bar = 123]'],
+        ];
+    }
 }
