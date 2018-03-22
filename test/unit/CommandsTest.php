@@ -16,15 +16,15 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 
 // auto-loader
 // TODO: setup phpunit.xml and remove auto-loader on the tests
-require (file_exists('./autoload.php'))
-    ? './autoload.php'
-    : '../vendor/autoload.php';
+require is_file(__DIR__.'/../src/autoload.php') === true
+    ? __DIR__.'/../src/autoload.php'
+    : __DIR__.'/../../vendor/autoload.php';
 
 class CommandsTest extends TestCase
 {
     /**
-    * @dataProvider commandsProvider
-    */
+     * @dataProvider commandsProvider
+     */
     public function testCommand($command, $parameters, $expected)
     {
         // EventDispatcher fulfill a complete test method request
