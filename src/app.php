@@ -4,9 +4,7 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 // auto-loader
-require is_file(__DIR__.'./autoload.php') === true
-    ? './autoload.php'
-    : '../vendor/autoload.php';
+require is_file(__DIR__.'/autoload.php') === true ? __DIR__.'/autoload.php' : __DIR__.'/../vendor/autoload.php';
 
 use Symfony\Component\Console\Application;
 

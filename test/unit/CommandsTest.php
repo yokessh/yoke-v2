@@ -16,12 +16,12 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 
 // auto-loader
 // TODO: setup phpunit.xml and remove auto-loader on the tests
-require is_file(__DIR__.'/../src/autoload.php') === true
-    ? __DIR__.'/../src/autoload.php'
-    : __DIR__.'/../../vendor/autoload.php';
+require is_file(__DIR__.'/../src/autoload.php') === true ? __DIR__.'/../src/autoload.php' : __DIR__.'/../../vendor/autoload.php';
 
 class CommandsTest extends TestCase
 {
+
+
     /**
      * @dataProvider commandsProvider
      */
@@ -35,19 +35,19 @@ class CommandsTest extends TestCase
         $application->setAutoExit(false);
 
         // EventDispatcher callback before a command runs
-        $dispatcher->addListener(ConsoleEvents::COMMAND, function (ConsoleCommandEvent $event) {
-            // gets the input instance
-            //$input = $event->getInput();
-
-            // gets the output instance
-            //$output = $event->getOutput();
-
-            // gets the command to be executed
-            //$command = $event->getCommand();
-
-            // gets the application
-            //$application = $command->getApplication();
-        });
+        $dispatcher->addListener(
+            ConsoleEvents::COMMAND,
+            function (ConsoleCommandEvent $event) {
+                // gets the input instance
+                // $input = $event->getInput();
+                // gets the output instance
+                // $output = $event->getOutput();
+                // gets the command to be executed
+                // $command = $event->getCommand();
+                // gets the application
+                // $application = $command->getApplication();
+            }
+        );
 
         // Encapsulate the Yoke Dispatcher to the application
         (new Yoke\Dispatcher($application));
@@ -57,7 +57,7 @@ class CommandsTest extends TestCase
 
         // TODO: Stop using the application itself. To mocking something up in the future the ApplicationTester is needed.
         $commandline = sprintf('%s %s', $command, $parameters);
-        $output = new StreamOutput(fopen('php://memory', 'w', false));
+        $output      = new StreamOutput(fopen('php://memory', 'w', false));
         $application->run(new StringInput($commandline), $output);
 
         rewind($output->getStream());
@@ -65,14 +65,27 @@ class CommandsTest extends TestCase
 
         // The Test
         $this->assertEquals($display, $expected);
-    }
+
+    }//end testCommand()
+
 
     public function commandsProvider()
     {
         // TODO: Correct the data for the ApplicationTester when used.
         return [
-            ['echo', 'test', 'Echo: test'],
-            ['echo', '--bar 123 test', 'Echo: test [bar = 123]'],
+            [
+                'echo',
+                'test',
+                'Echo: test',
+            ],
+            [
+                'echo',
+                '--param1 123 test',
+                'Echo: test [bar = 123]',
+            ],
         ];
-    }
-}
+
+    }//end commandsProvider()
+
+
+}//end class

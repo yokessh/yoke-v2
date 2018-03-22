@@ -8,31 +8,44 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class EchoCommand extends BaseCommand
+use Yoke\Command\YokeCommand;
+use Yoke\Command\YokeCommandCaller;
+
+class EchoCommand extends YokeCommand
 {
+
+
     public function __construct()
     {
-        $this->SetCMD(
+        parent::__construct(
+            'echo',
+            'Echo is used to test out the parameters',
             [
-                'name' => 'echo',
-                'Echo is used to test out the parameters',
-                'args' => [
-                    ['foo', InputArgument::REQUIRED, 'The directory']
+                [
+                    'text',
+                    InputArgument::REQUIRED,
+                    'The text to be printed out',
                 ],
-                'options' => [
-                    ['bar', null, InputOption::VALUE_REQUIRED]
-                ]
+            ],
+            [
+                [
+                    'param1',
+                    null,
+                    InputOption::VALUE_REQUIRED,
+                ],
             ]
         );
-    }
 
-    public function run(InputInterface $input, OutputInterface $output)
+    }//end __construct()
+
+
+    public function run(string $text, array $options, YokeCommandCaller $commandBase)
     {
-        $foo = $input->getArgument('foo');
-        $bar = $input->getOption('bar');
-        $output->write(sprintf('Echo: %s', $foo) .
-            (($bar != '')
-                ? sprintf(' [bar = %s]', $bar)
-                : ''));
-    }
-}
+        $param1 = ($options['param1'] != '') ? sprintf(' [bar = %s]', $options['param1']) : '';
+
+        $commandBase->output->write(sprintf('Echo: %s', $text).$param1);
+
+    }//end run()
+
+
+}//end class

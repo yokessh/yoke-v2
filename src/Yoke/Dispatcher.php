@@ -9,25 +9,33 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 // Yoke Commands
-use \Yoke\Commands\EchoCommand;
+use Yoke\Commands\EchoCommand;
 
 class Dispatcher
 {
-    private $_app;
+    private $app;
+
 
     public function __construct(Application $app)
     {
-        $this->_app = $app;
+        $this->app = $app;
         $this->Prepare();
-    }
+
+    }//end __construct()
+
 
     public function prepare()
     {
-        (new EchoCommand())->Register($this->_app);
-    }
+        (new EchoCommand())->registry($this->app);
+
+    }//end prepare()
+
 
     public function run()
     {
-        $this->_app->Run();
-    }
-}
+        $this->app->Run();
+
+    }//end run()
+
+
+}//end class
