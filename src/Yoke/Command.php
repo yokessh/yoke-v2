@@ -24,7 +24,7 @@ class YokeCommandCaller
     }//end __construct()
 
 
-    public static function Create(Application $app, InputInterface $input, OutputInterface $output): YokeCommandCaller
+    public static function create(Application $app, InputInterface $input, OutputInterface $output): YokeCommandCaller
     {
         return new YokeCommandCaller($app, $input, $output);
 

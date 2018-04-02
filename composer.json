@@ -23,11 +23,6 @@
             "Yoke\\Test\\": "tests/"
         }
     },
-    "scripts": {
-        "psr2": [
-          "vendor/squizlabs/php_codesniffer/bin/phpcs.bat --standard=PSR2 --extensions=php,inc,lib src/"
-        ]
-    },
     "license": "MIT",
     "authors": [
         {
